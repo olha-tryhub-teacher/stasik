@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main-window-container">
+    <div class="white-window shadow-lg d-flex flex-column">
+
+        <!-- ЦЕНТРАЛЬНИЙ БЛОК РЕЄСТРАЦІЇ -->
+        <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+            <div class="registration-card p-5">
+                <h1 class="display-4 fw-bold text-center mb-5">Створення аккаунту</h1>
+
+                <form method="post" class="register-form">
+                    {% csrf_token %}
+                    <div class="form-fields-container">
+                        {% for field in form %}
+                            <div class="mb-4">
+                                <label class="form-label fs-5 fw-bold mb-2">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text mt-1">{{ field.help_text|safe }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-dark btn-lg w-100 py-3 mt-4 fs-5 fw-bold shadow">
+                        Зареєструватися
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ОПИС ПРИЗНАЧЕННЯ ШАБЛОНУ (ЗНИЗУ) -->
+        <div class="description-footer p-5 text-center bg-light border-top">
+            <h3 class="fw-bold mb-3">Для чого потрібна ця реєстрація?</h3>
+            <p class="fs-4 mx-auto text-muted" style="max-width: 1000px;">
+                Цей шаблон розроблений для швидкого та безпечного створення особистого кабінету клієнта.
+                Реєстрація дозволяє вам відстежувати замовлення, накопичувати бонуси в програмі лояльності
+                та першими отримувати доступ до лімітованих колекцій нашої канцелярії.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    /* Базові налаштування контейнера */
+    .container.mt-4 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .main-window-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        min-height: 100vh;
+        padding: 0 15px;
+    }
+
+    .white-window {
+        background-color: #ffffff !important;
+        width: 100%;
+        max-width: 1700px;
+        min-height: 100vh;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    /* Картка реєстрації */
+    .registration-card {
+        width: 100%;
+        max-width: 650px; /* Оптимальна ширина форми для зручного читання */
+    }
+
+    /* Стилізація інпутів (збільшений шрифт) */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    select {
+        display: block;
+        width: 100%;
+        padding: 15px 20px; /* Збільшені відступи */
+        font-size: 1.2rem; /* Більший шрифт */
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        color: #111 !important;
+    }
+
+    input:focus {
+        outline: none;
+        background-color: #fff;
+        border-color: #111;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    /* Корекція тексту */
+    h1, h2, h3, p, label {
+        color: #111111 !important;
+        text-shadow: none !important;
+    }
+
+    .btn-dark {
+        background-color: #111 !important;
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .btn-dark:hover {
+        transform: translateY(-2px);
+        background-color: #333 !important;
+    }
+
+    /* Адаптація під мобільні */
+    @media (max-width: 768px) {
+        .registration-card {
+            padding: 20px !important;
+        }
+        h1 { font-size: 2rem; }
+    }
+</style>
+{% endblock %}

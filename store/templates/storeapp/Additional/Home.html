@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main-window-container">
+    <div class="white-window shadow-lg">
+
+        <!-- СЕКЦІЯ 1: БАНЕР ТА ПРИВІТАННЯ -->
+        <section class="mb-0">
+            <div class="header-image-container">
+                <img src="https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?q=80&w=1700"
+                     alt="Канцтовари" class="img-fluid banner-img">
+            </div>
+            <div class="p-4 p-md-5 text-center content-section">
+                <h1 class="display-2 fw-bold mb-3">SHOP: Майстерня ідей</h1>
+                <p class="fs-4 text-muted mx-auto" style="max-width: 1000px;">
+                    Ваш надійний простір якісної канцелярії для творчості, навчання та успішного бізнесу.
+                    Ми збираємо найкраще приладдя з усього світу, щоб кожен ваш рядок був ідеальним.
+                </p>
+            </div>
+        </section>
+
+        <!-- СЕКЦІЯ 2: РОЗШИРЕНИЙ ОПИС ТА ПРОДУКЦІЯ -->
+        <section class="p-4 p-md-5 bg-white flex-grow-1">
+            <div class="row justify-content-center">
+                <div class="col-xl-10 text-center">
+                    <hr class="my-5" style="opacity: 0.1;">
+                    <h2 class="display-4 fw-bold mb-4">Більше ніж просто магазин</h2>
+                    <p class="fs-5 mb-5 mx-auto" style="max-width: 1100px;">
+                        Ми віримо, що естетичне приладдя здатне змінити підхід до роботи. Наша місія — забезпечити вас інструментами, які викликають бажання творити, планувати та досягати мети.
+                    </p>
+
+                    <div class="row text-start mt-5 g-5">
+                        <div class="col-md-4">
+                            <div class="p-4 border rounded-4 shadow-sm h-100 bg-light bg-opacity-50">
+                                <h4 class="fw-bold mb-3">🖋 Письмове приладдя</h4>
+                                <p class="text-muted">Ексклюзивні ручки, лінери та професійні олівці для будь-яких завдань.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4 border rounded-4 shadow-sm h-100 bg-light bg-opacity-50">
+                                <h4 class="fw-bold mb-3">📔 Паперова продукція</h4>
+                                <p class="text-muted">Блокноти преміум-класу з ідеальною щільністю паперу для ваших думок.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-4 border rounded-4 shadow-sm h-100 bg-light bg-opacity-50">
+                                <h4 class="fw-bold mb-3">🎨 Творчий розвиток</h4>
+                                <p class="text-muted">Все необхідне для художників: від акварелі до якісних пензлів.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ПАСХАЛКА (МАКСИМАЛЬНО НЕЗАМІТНА) -->
+        <footer class="py-2 mt-auto border-0 bg-transparent text-center">
+            <p class="secret-text">
+                Це пасхалка для мого колективу з яким я робив цей проект /secret/
+            </p>
+        </footer>
+
+    </div>
+</div>
+
+<style>
+    /* ПРИБИРАЄМО СТАНДАРТНІ ВІДСТУПИ */
+    .container.mt-4 {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .main-window-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        min-height: 100vh;
+        padding: 0 15px;
+    }
+
+    .white-window {
+        background-color: #ffffff !important;
+        width: 100%;
+        max-width: 1700px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .banner-img {
+        width: 100%;
+        height: 550px;
+        object-fit: cover;
+    }
+
+    /* СЕКРЕТНИЙ ТЕКСТ */
+    .secret-text {
+        font-size: 8px !important; /* Ультра-малий шрифт */
+        color: #e0e0e0 !important; /* Світло-сірий, майже зливається з білим */
+        letter-spacing: 0.5px;
+        margin: 0;
+        padding-bottom: 10px;
+        cursor: default;
+        user-select: none; /* Щоб важче було випадково виділити мишкою */
+        transition: color 0.5s ease;
+    }
+
+    /* При наведенні текст стає видимим */
+    .secret-text:hover {
+        color: #999999 !important;
+    }
+
+    h1, h2, h3, h4, h5, p {
+        color: #111111 !important;
+        text-shadow: none !important;
+    }
+
+    .border {
+        border: 1px solid rgba(0,0,0,0.08) !important;
+    }
+</style>
+{% endblock %}

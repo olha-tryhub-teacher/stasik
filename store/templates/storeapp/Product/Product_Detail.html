@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.title }} | SHOP{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Кнопка назад -->
+    <a href="{% url 'storeapp:product_list' %}" class="text-dark fw-bold text-decoration-none mb-4 d-inline-block">
+        ← Повернутися до каталогу
+    </a>
+
+    <div class="product-detail-window p-4 p-md-5">
+        <div class="row g-5">
+            <!-- Колонна з фото -->
+            <div class="col-lg-6">
+                <div class="detail-img-container shadow-sm">
+                    {% if product.photo %}
+                        <img src="{{ product.photo.url }}" alt="{{ product.title }}">
+                    {% else %}
+                        <span class="text-muted">Зображення відсутнє</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Колонна з інфо -->
+            <div class="col-lg-6 d-flex flex-column justify-content-center">
+                <div class="ps-lg-4">
+                    {% if product.manufacturer %}
+                        <span class="brand-badge text-dark">{{ product.manufacturer.title }}</span>
+                    {% endif %}
+
+                    <h1 class="detail-title">{{ product.title }}</h1>
+                    <p class="detail-category">{{ product.category.title }}</p>
+
+                    <div class="detail-price">{{ product.price }} грн</div>
+
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3">Опис продукту</h5>
+                        <p class="text-muted lh-lg" style="font-weight: 400; text-shadow: none !important;">
+                            {{ product.description }}
+                        </p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <!-- Ми вказуємо шлях до AddToCartView і передаємо ID поточного продукту -->
+                            <form action="{% url 'storeapp:add_to_cart' product.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-buy-now">Додати в кошик</button>
+                            </form>
+                        </div>
+                        {% if user.is_superuser %}
+                        <div class="col-md-4">
+                            <a href="{% url 'storeapp:product_update' product.pk %}" class="btn btn-outline-dark w-100 h-100 d-flex align-items-center justify-content-center rounded-4 fw-bold">
+                                Редагувати
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Технічні деталі -->
+                    <div class="specs-table">
+                        <div class="spec-item">
+                            <span class="spec-label">Артикул</span>
+                            <span class="spec-value">#00{{ product.id }}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Наявність</span>
+                            <span class="spec-value text-success">В наявності</span>
+                        </div>
+                        {% if product.manufacturer %}
+                        <div class="spec-item">
+                            <span class="spec-label">Виробник</span>
+                            <span class="spec-value">{{ product.manufacturer.title }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

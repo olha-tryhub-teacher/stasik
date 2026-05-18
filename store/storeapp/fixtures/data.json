@@ -1,0 +1,110 @@
+[
+  {
+    "model": "storeapp.category",
+    "pk": 1,
+    "fields": {
+      "title": "Письмове приладдя"
+    }
+  },
+  {
+    "model": "storeapp.category",
+    "pk": 2,
+    "fields": {
+      "title": "Паперова продукція"
+    }
+  },
+  {
+    "model": "storeapp.category",
+    "pk": 3,
+    "fields": {
+      "title": "Офісне приладдя"
+    }
+  },
+  {
+    "model": "storeapp.manufacturer",
+    "pk": 1,
+    "fields": {
+      "title": "Axent",
+      "phone_number": "+380-44-123-45-67",
+      "address": "Німеччина (виробництво у Китаї)"
+    }
+  },
+  {
+    "model": "storeapp.manufacturer",
+    "pk": 2,
+    "fields": {
+      "title": "Parker",
+      "phone_number": "+44-20-1234-5678",
+      "address": "Ньюхейвен, Велика Британія"
+    }
+  },
+  {
+    "model": "storeapp.manufacturer",
+    "pk": 3,
+    "fields": {
+      "title": "Buromax",
+      "phone_number": "+380-44-987-65-43",
+      "address": "Київ, Україна"
+    }
+  },
+  {
+    "model": "storeapp.product",
+    "pk": 1,
+    "fields": {
+      "title": "Ручка кулькова Parker Jotter Blue",
+      "price": "850.00",
+      "description": "Класична кулькова ручка з фірмовим кліпом у формі стріли. Сині чорнила.",
+      "photo": "images/products/parker_blue.jpg",
+      "category": 1,
+      "manufacturer": 2
+    }
+  },
+  {
+    "model": "storeapp.product",
+    "pk": 2,
+    "fields": {
+      "title": "Блокнот Axent на спіралі A5",
+      "price": "120.00",
+      "description": "96 аркушів, клітинка, пластикова обкладинка. Ідеально для навчання.",
+      "photo": "images/products/notebook_axent.jpg",
+      "category": 2,
+      "manufacturer": 1
+    }
+  },
+  {
+    "model": "storeapp.product",
+    "pk": 3,
+    "fields": {
+      "title": "Набір лайнерів Axent (12 кольорів)",
+      "price": "340.00",
+      "description": "Тонкі маркери для малювання та креслення. Товщина лінії 0.4 мм.",
+      "photo": "images/products/liners_axent.jpg",
+      "category": 1,
+      "manufacturer": 1
+    }
+  },
+  {
+    "model": "storeapp.product",
+    "pk": 4,
+    "fields": {
+      "title": "Степлер Buromax Heavy Duty",
+      "price": "450.00",
+      "description": "Потужний степлер, пробиває до 100 аркушів одночасно.",
+      "photo": "images/products/stapler_buromax.jpg",
+      "category": 3,
+      "manufacturer": 3
+    }
+  },
+  {
+    "model": "storeapp.product",
+    "pk": 5,
+    "fields": {
+      "title": "Щоденник Buromax 2026",
+      "price": "280.00",
+      "description": "Датований щоденник, тверда обкладинка зі штучної шкіри.",
+      "photo": "images/products/diary_2026.jpg",
+      "category": 2,
+      "manufacturer": 3
+    }
+  }
+]
