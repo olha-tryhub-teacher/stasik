@@ -34,8 +34,7 @@ class Product(models.Model):
         return f"{self.title}, {self.manufacturer}"
 
 
-class Order (models.Model):
-
+class Order(models.Model):
     STATUS_CHOICES = [
         ("incart", "В корзині"),
         ("new", "Нове"),
@@ -54,8 +53,12 @@ class Order (models.Model):
     def __str__(self):
         return f"order number: {self.id}"
 
+    # ДОДАТКОВО: Метод для підрахунку суми всього замовлення (знадобиться для історії замовлень)
+    def get_total_price(self):
+        return sum(item.get_total_price() for item in self.order_product_set.all())
 
-class Order_product (models.Model):
+
+class Order_product(models.Model):
     amount = models.PositiveIntegerField()
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, blank=True, null=True)
@@ -63,5 +66,10 @@ class Order_product (models.Model):
     def __str__(self):
         return f"{self.amount}, {self.product}, {self.order}"
 
-
-
+    # =====================================================================
+    # ОСЬ ЦЕЙ МЕТОД ОДРАЗУ НАВЕДЕ ПОРЯДОК І ПРИБЕРЕ ПОМИЛКУ АТРИБУТУ!
+    # =====================================================================
+    def get_total_price(self):
+        if self.product and self.product.price:
+            return self.product.price * self.amount
+        return 0

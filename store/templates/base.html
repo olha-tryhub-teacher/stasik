@@ -4,38 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SHOP{% endblock %}</title>
+    <title>{% block title %}Головна сторінка{% endblock %}</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Головні стилі сайту (навігація, футер, фон) -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    <!-- Блок для додаткових стилів окремих сторінок -->
+    <style>
+        /* РОБОТА З ВИСОТОЮ: Змушуємо body розтягуватися на весь екран */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Контентна частина забирає весь вільний простір і штовхає футер донизу */
+        .main-content {
+            flex: 1 0 auto;
+        }
+
+        /* Захист футера від стискання */
+        footer {
+            flex-shrink: 0;
+        }
+
+        /* ПЛАВНЕ ПІДСВІЧУВАННЯ ПОСИЛАНЬ У ШАПЦІ ПРИ НАВЕДЕННІ */
+        .navbar-nav .nav-link {
+            transition: color 0.25s ease-in-out, opacity 0.25s ease-in-out;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+
+        /* ОНОВЛЕНА ЧЕРВОНА КНОПКА ВИХОДУ */
+        .logout-button {
+            background: none;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+        .logout-button:hover {
+            background-color: #dc3545;
+            color: #212529 !important;
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.4);
+        }
+    </style>
+
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'storeapp:home' %}">SHOP</a>
+        <a class="navbar-brand" href="{% url 'storeapp:home' %}">Головна</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{% url 'storeapp:product_list' %}">Товари</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'storeapp:category_list' %}">Категорії</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'storeapp:manufacturer_list' %}">Виробники</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'storeapp:cart' %}">Корзина</a></li>
             </ul>
-            <ul class="navbar-nav">
+            <ul class="navbar-nav align-items-center">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <span class="nav-link text-white opacity-75">Вітаємо, {{ user.username }}!</span>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'storeapp:profile' %}">Профіль</a></li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{% url 'storeapp:order_list' %}">Мої замовлення</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'storeapp:profile' %}">Профіль</a></li>
+                    <li class="nav-item ms-lg-2">
                         <form method="post" action="{% url 'storeapp:logout' %}" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="logout-button">Вийти</button>
@@ -57,13 +105,12 @@
     </div>
 </main>
 
-<footer class="text-center">
+<footer class="text-center bg-dark">
     <div class="container">
-        <small class="fw-bold text-white">© 2026 Мій Django проект!</small>
+        <small class="fw-bold text-white">Store: найкращий вибір для вас</small>
     </div>
 </footer>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}" defer></script>
 {% block extra_js %}{% endblock %}

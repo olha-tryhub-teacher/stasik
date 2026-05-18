@@ -3,82 +3,149 @@
 
 {% block title %}{{ product.title }} | SHOP{% endblock %}
 
-{% block content %}
-<div class="container py-5">
-    <!-- Кнопка назад -->
-    <a href="{% url 'storeapp:product_list' %}" class="text-dark fw-bold text-decoration-none mb-4 d-inline-block">
-        ← Повернутися до каталогу
-    </a>
+{% block extra_head %}
+<link class="main-stylesheet" rel="stylesheet" href="{% static 'css/product_list.css' %}">
+{% endblock %}
 
-    <div class="product-detail-window p-4 p-md-5">
+{% block content %}
+<div class="main-window-container py-5">
+    <div class="white-window shadow-2xl p-4 p-md-5 mx-auto" style="max-width: 1000px; border-radius: 24px; background: #fff;">
+
+        <div class="mb-4">
+            <a href="{% url 'storeapp:product_list' %}" class="btn btn-outline-dark rounded-pill px-4 fw-bold btn-sm">
+                <i class="bi bi-arrow-left"></i> Назад до каталогу
+            </a>
+        </div>
+
         <div class="row g-5">
-            <!-- Колонна з фото -->
-            <div class="col-lg-6">
-                <div class="detail-img-container shadow-sm">
-                    {% if product.photo %}
-                        <img src="{{ product.photo.url }}" alt="{{ product.title }}">
-                    {% else %}
-                        <span class="text-muted">Зображення відсутнє</span>
-                    {% endif %}
+            <div class="col-12 col-md-6">
+                <div class="img-wrapper shadow-sm d-flex align-items-center justify-content-center rounded-4"
+                     style="background-color: #f8f9fa; height: 400px; border: 1px solid #eee;">
+                    <img src="{% if product.photo %}{{ product.photo.url }}{% endif %}"
+                         class="img-fluid object-fit-contain p-4 h-100 w-100"
+                         alt="{{ product.title }}"
+                         id="detail-product-img"
+                         onerror="backToStaticPhoto('{{ product.pk }}');">
                 </div>
             </div>
 
-            <!-- Колонна з інфо -->
-            <div class="col-lg-6 d-flex flex-column justify-content-center">
-                <div class="ps-lg-4">
-                    {% if product.manufacturer %}
-                        <span class="brand-badge text-dark">{{ product.manufacturer.title }}</span>
-                    {% endif %}
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+                <div>
+                    <h1 class="fw-bold mb-3" style="color: #212529; font-size: 2rem;">
+                        {% if product.pk == 1 %}Набір художньої акварелі (24 кольори)
+                        {% elif product.pk == 2 %}Набір яскравих маркерів-виділювачів (6 шт)
+                        {% elif product.pk == 3 %}Діловий щоденник Buromax 2026 (Сірий)
+                        {% elif product.pk == 4 %}Потужний степлер Buromax Heavy-Duty
+                        {% elif product.pk == 5 %}Органайзер діловий з магнітною застібкою (Синій)
+                        {% elif product.pk == 6 %}Набір кольорових фломастерів у пеналі
+                        {% elif product.pk == 7 %}Пенал-органайзер тканинний (Бордовий)
+                        {% elif product.pk == 8 %}Настільний календар-планер "Еко-Крафт"
+                        {% elif product.pk == 9 %}Записна книжка Преміум з ручкою (Смарагдова)
+                        {% else %}{{ product.title }}{% endif %}
+                    </h1>
 
-                    <h1 class="detail-title">{{ product.title }}</h1>
-                    <p class="detail-category">{{ product.category.title }}</p>
-
-                    <div class="detail-price">{{ product.price }} грн</div>
-
-                    <div class="mb-4">
-                        <h5 class="fw-bold mb-3">Опис продукту</h5>
-                        <p class="text-muted lh-lg" style="font-weight: 400; text-shadow: none !important;">
-                            {{ product.description }}
-                        </p>
+                    <div class="price-box mb-4 py-2 px-3 rounded-3 d-inline-block" style="background-color: #f1f3f5;">
+                        <span class="fs-3 fw-bold text-dark">
+                            {% if product.pk == 1 %}245
+                            {% elif product.pk == 2 %}120
+                            {% elif product.pk == 3 %}380
+                            {% elif product.pk == 4 %}350
+                            {% elif product.pk == 5 %}420
+                            {% elif product.pk == 6 %}295
+                            {% elif product.pk == 7 %}180
+                            {% elif product.pk == 8 %}140
+                            {% elif product.pk == 9 %}390
+                            {% else %}{{ product.price }}{% endif %} грн
+                        </span>
                     </div>
 
-                    <div class="row g-3">
-                        <div class="col-md-8">
-                            <!-- Ми вказуємо шлях до AddToCartView і передаємо ID поточного продукту -->
-                            <form action="{% url 'storeapp:add_to_cart' product.id %}" method="POST">
+                    <h5 class="fw-bold text-muted mb-2">Опис товару:</h5>
+                    <p class="text-secondary lh-lg mb-4" style="font-size: 1.05rem;">
+                        {% if product.description and product.description != "Опис відсутній" and product.description != "" %}
+                            {{ product.description }}
+                        {% else %}
+                            {% if product.pk == 1 %}Високоякісні акварельні фарби для художників та любителів творчості. Легко змішуються, мають яскраві пігменти та відмінно лягають на папір.
+                            {% elif product.pk == 2 %}Комплект неонових маркерів для виділення важливого тексту в конспектах чи документах. Не розмазують чорнило ручки та довго не висихають.
+                            {% elif product.pk == 3 %}Стильний діловий щоденник у міцній сірій обкладинці. Ідеально підходить для планування робочих зустрічей, завдань та щоденних нотаток.
+                            {% elif product.pk == 4 %}Надійний та потужний офісний степлер для скріплення великої кількості аркушів. Ергономічний дизайн та міцний металевий механізм.
+                            {% elif product.pk == 5 %}Елегантний синій органайзер зі зручною магнітною застібкою. Допоможе тримати всі важливі записи та картки в одному надійному місці.
+                            {% elif product.pk == 6 %}Яскраві фломастери в практичному пеналі, які легко змиваються зі шкіри та одягу. Прекрасний вибір для малювання та розфарбовування.
+                            {% elif product.pk == 7 %}Зручний та місткий тканинний пенал бордового кольору. Має кілька відділень для олівців, ручок та іншої дрібної канцелярії.
+                            {% elif product.pk == 8 %}Практичний настільний планер з екологічного крафтового паперу. Дозволяє зручно візуалізувати завдання на тиждень або місяць.
+                            {% elif product.pk == 9 %}Записна книжка преміум-класу в смарагдовій обкладинці зі зручною ручкою в комплекті. Чудовий подарунок для колег або для себе.{% endif %}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <form method="post" action="{% url 'storeapp:add_to_cart' product.id %}" class="mt-4">
+                    {% csrf_token %}
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <label for="quantity" class="fw-bold text-muted small mb-0">Кількість:</label>
+
+                        <select id="quantity" name="quantity" class="form-select text-center fw-bold rounded-pill shadow-sm"
+                                style="width: 110px; border: 2px solid #212529; height: 45px; cursor: pointer;">
+                    <option value="1" selected>1 шт</option>
+                    <option value="2">2 шт</option>
+                    <option value="3">3 шт</option>
+                    <option value="4">4 шт</option>
+                    <option value="5">5 шт</option>
+                    <option value="6">6 шт</option>
+                    <option value="7">7 шт</option>
+                    <option value="8">8 шт</option>
+                    <option value="9">9 шт</option>
+                    <option value="10">10 шт</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark rounded-pill py-3 fw-bold shadow-sm w-100" style="letter-spacing: 0.5px;">
+                        ДОДАТИ В КОШИК
+                    </button>
+                </form>
+
+                {% if user.is_superuser %}
+                    <div class="d-grid gap-3 mt-3">
+                        <hr class="my-3">
+                        <div class="card border-warning p-3 bg-light rounded-3">
+                            <h6 class="fw-bold text-warning mb-2"><i class="bi bi-shield-lock"></i> Панель адміністратора</h6>
+                            <a href="{% url 'storeapp:product_update' product.pk %}" class="btn btn-outline-warning btn-sm fw-bold rounded-pill mb-2">
+                                <i class="bi bi-pencil"></i> Редагувати товар повністю
+                            </a>
+
+                            <form method="post" action="{% url 'storeapp:product_update' product.pk %}" enctype="multipart/form-data" class="mt-2">
                                 {% csrf_token %}
-                                <button type="submit" class="btn-buy-now">Додати в кошик</button>
+                                <label class="small text-muted fw-bold mb-1">Швидка заміна photo:</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="file" name="photo" class="form-control" required>
+                                    <button type="submit" class="btn btn-dark">Оновити</button>
+                                </div>
                             </form>
                         </div>
-                        {% if user.is_superuser %}
-                        <div class="col-md-4">
-                            <a href="{% url 'storeapp:product_update' product.pk %}" class="btn btn-outline-dark w-100 h-100 d-flex align-items-center justify-content-center rounded-4 fw-bold">
-                                Редагувати
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
-
-                    <!-- Технічні деталі -->
-                    <div class="specs-table">
-                        <div class="spec-item">
-                            <span class="spec-label">Артикул</span>
-                            <span class="spec-value">#00{{ product.id }}</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Наявність</span>
-                            <span class="spec-value text-success">В наявності</span>
-                        </div>
-                        {% if product.manufacturer %}
-                        <div class="spec-item">
-                            <span class="spec-label">Виробник</span>
-                            <span class="spec-value">{{ product.manufacturer.title }}</span>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
+
     </div>
 </div>
+
+<script>
+function backToStaticPhoto(id) {
+    const img = document.getElementById('detail-product-img');
+    if (!img) return;
+    img.onerror = null;
+    const photos = {
+        "1": "/media/1.png",
+        "2": "/media/2.pфng",
+        "3": "/media/3.png",
+        "4": "/media/4.png",
+        "5": "/media/5.png",
+        "6": "/media/6.png",
+        "7": "/media/im.jpg",
+        "8": "/media/im2.jpg",
+        "9": "/media/images.jpg"
+    };
+    img.src = photos[id] || "/media/placeholder.png";
+}
+</script>
 {% endblock %}

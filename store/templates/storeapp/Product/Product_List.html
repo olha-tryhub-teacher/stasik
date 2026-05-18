@@ -4,57 +4,78 @@
 {% block title %}Каталог | SHOP{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+<link class="main-stylesheet" rel="stylesheet" href="{% static 'css/product_list.css' %}">
+<style>
+    /* Стильні темно-сірі кнопки під колір шапки сайту */
+    .btn-dark-window {
+        background-color: #212529 !important;
+        color: #ffffff !important;
+        border: 1px solid #212529 !important;
+        transition: all 0.2s ease-in-out;
+    }
+    .btn-dark-window:hover {
+        background-color: #343a40 !important;
+        border-color: #343a40 !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Кнопка редагування (контурна, теж у колір віконця) */
+    .btn-edit-window {
+        background: none !important;
+        border: 1px solid #212529 !important;
+        color: #212529 !important;
+        transition: all 0.2s ease-in-out;
+    }
+    .btn-edit-window:hover {
+        background-color: #212529 !important;
+        color: #ffffff !important;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="main-window-container">
     <div class="white-window shadow-2xl">
-
         <div class="content-padding px-4 px-md-5 py-5">
-            <div class="text-center mb-5">
-                <h1 class="catalog-header">Каталог</h1>
-                <p class="text-muted fw-normal">Знайдіть те, що надихає вас сьогодні</p>
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start mb-5 gap-3">
+                <div class="text-center text-md-start">
+                    <h1 class="catalog-header mb-1">Світ Канцелярії</h1>
+                    <p class="text-muted fw-normal mb-0">Професійне приладдя для офісу, навчання та творчості</p>
+                </div>
+
+                <div class="w-100 w-md-auto">
+                    <form method="get" action="{% url 'storeapp:product_list' %}" class="d-flex gap-2">
+                        <select name="category" class="form-select rounded-pill px-3" style="min-width: 250px; border: 1px solid #ced4da;">
+                            <option value="">Всі категорії</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"i" %}selected{% endif %}>
+                                    {{ cat.title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit" class="btn btn-dark rounded-pill px-4">Шукати</button>
+                    </form>
+                </div>
             </div>
 
-            <!-- Фільтр -->
-            <div class="filter-wrapper mb-5">
-                <form method="get" class="filter-form mx-auto d-flex gap-2">
-                    <select name="category" class="form-select filter-select rounded-pill px-4">
-                        <option value="">Всі категорії</option>
-                        {% for category in categories %}
-                            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
-                                {{ category.title }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-dark rounded-pill px-5 fw-bold">ШУКАТИ</button>
-                </form>
-            </div>
-
-            <!-- Товари -->
             <div class="row g-4 products-grid">
-                {% for product in products %}
+                {% for p in products %}
                     <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
                         <div class="product-item">
-                            <div class="img-wrapper shadow-sm">
-                                {% if product.photo %}
-                                    <img src="{{ product.photo.url }}" class="product-img w-100 h-100 object-fit-contain p-3" alt="{{ product.title }}">
-                                {% else %}
-                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">Немає фото</div>
-                                {% endif %}
+                            <div class="img-wrapper shadow-sm d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; height: 250px;">
+                                <img src="{% if p.photo %}{{ p.photo.url }}{% else %}/media/{{ p.id }}.png{% endif %}" class="product-img w-100 h-100 object-fit-contain p-3" alt="{{ p.title }}">
                             </div>
-
                             <div class="product-info text-start">
-                                <h2 class="product-title">{{ product.title }}</h2>
-                                <p class="product-price mb-3">{{ product.price }} грн</p>
-
+                                <h2 class="product-title">{{ p.title }}</h2>
+                                <p class="product-price mb-3">{{ p.price }} грн</p>
                                 <div class="d-grid gap-2">
-                                    <a href="{% url 'storeapp:product_detail' product.pk %}" class="btn-view text-center text-decoration-none">Детальніше</a>
+                                    <a href="{% url 'storeapp:product_detail' p.id %}" class="btn btn-dark-window text-center text-decoration-none rounded-3 py-2 fw-medium">Детальніше</a>
 
                                     {% if user.is_superuser %}
-                                        <a href="{% url 'storeapp:product_update' product.pk %}" class="text-warning text-center small text-decoration-none mt-2">
-                                            <i class="bi bi-pencil"></i> Редагувати
+                                        <a href="{% url 'storeapp:product_update' p.id %}" class="btn btn-edit-window btn-sm d-block text-center mt-2 fw-medium rounded-3 py-1">
+                                            ⚙️ Редагувати
                                         </a>
                                     {% endif %}
                                 </div>
@@ -63,21 +84,12 @@
                     </div>
                 {% empty %}
                     <div class="col-12 text-center py-5">
-                        <h3 class="text-muted">Товарів не знайдено</h3>
+                        <p class="text-muted fs-5">У цій категорії поки що немає товарів.</p>
                     </div>
                 {% endfor %}
             </div>
-        </div>
 
-        <div class="description-footer text-center">
-            <div class="container">
-                <h3 class="fw-bold mb-4">Тільки найкраще для вас</h3>
-                <p class="text-muted mx-auto" style="max-width: 700px;">
-                    Наш асортимент постійно оновлюється. Ми працюємо з перевіреними виробниками, щоб гарантувати високу якість кожного товару в нашому каталозі.
-                </p>
-            </div>
         </div>
-
     </div>
 </div>
 {% endblock %}

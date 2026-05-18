@@ -1,10 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}{{ manufacturer.title }} | SHOP{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/manufacturer_list.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="mb-4">
+        <a href="{% url 'storeapp:manufacturer_list' %}" class="btn btn-outline-dark rounded-pill px-4 btn-sm">
+            <i class="bi bi-arrow-left"></i> Назад до списку
+        </a>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <span class="badge bg-dark rounded-pill align-self-start mb-3 px-3 py-2">Офіційний партнер</span>
+                <h1 class="fw-bold mb-4" style="color: #212529;">{{ manufacturer.title }}</h1>
+
+                <hr class="text-muted opacity-25 mb-4">
+
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-light text-dark rounded-3 p-2 me-3">
+                        <i class="bi bi-telephone-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small d-block">Телефон</span>
+                        <strong class="text-dark">{{ manufacturer.phone_number|default:"Не вказано" }}</strong>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-light text-dark rounded-3 p-2 me-3">
+                        <i class="bi bi-geo-alt-fill fs-5"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small d-block">Адреса офісу / складу</span>
+                        <strong class="text-dark">{{ manufacturer.address|default:"Не вказано" }}</strong>
+                    </div>
+                </div>
+
+                {% if manufacturer.description %}
+                <div class="mt-4">
+                    <h5 class="fw-bold mb-2">Про компанію</h5>
+                    <p class="text-muted small lh-base">{{ manufacturer.description }}</p>
+                </div>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                <div class="d-grid gap-2 mt-4 pt-3 border-top border-light">
+                    <a href="{% url 'storeapp:manufacturer_update' manufacturer.pk %}" class="btn btn-sm btn-outline-warning rounded-pill">
+                        <i class="bi bi-pencil"></i> Редагувати дані
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <h3 class="fw-bold mb-4" style="color: #212529;">Товари від {{ manufacturer.title }}</h3>
+
+                <div class="row g-3">
+                    {% for p in products %}
+                        <div class="col-12 col-sm-6 col-md-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden text-center p-3" style="background-color: #f8f9fa;">
+                                <div class="d-flex align-items-center justify-content-center mb-2" style="height: 140px;">
+                                    <img src="{% if p.photo %}{{ p.photo.url }}{% else %}/media/{{ p.id }}.png{% endif %}" class="img-fluid h-100 object-fit-contain" alt="{{ p.title }}">
+                                </div>
+                                <h6 class="fw-bold text-truncate mb-1" title="{{ p.title }}">{{ p.title }}</h6>
+                                <p class="text-dark small fw-bold mb-3">{{ p.price }} грн</p>
+                                <a href="{% url 'storeapp:product_detail' p.id %}" class="btn btn-sm btn-dark rounded-pill w-100">
+                                    Детальніше
+                                </a>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12 text-center py-5 text-muted">
+                            <i class="bi bi-box-seam display-5 d-block mb-2 opacity-50"></i>
+                            У цього виробника поки немає доданих товарів.
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

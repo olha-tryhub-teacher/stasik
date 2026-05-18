@@ -1,10 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Ваш кошик | SHOP{% endblock %}
+
+{% block extra_head %}
+    <link class="main-stylesheet" rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="cart-window">
+        <h1 class="cart-header">Мій Кошик</h1>
+
+        <div class="cart-items-list">
+            {% for item in cart_items %}
+            <div class="cart-item d-flex align-items-center justify-content-between p-3 mb-3 bg-white shadow-sm rounded-4" style="border: 1px solid #f1f3f5;">
+                <div class="cart-item-img shadow-sm rounded-3 overflow-hidden" style="width: 80px; height: 80px; background: #f8f9fa;">
+                    {% if item.product.photo %}
+                        <img src="{{ item.product.photo.url }}" alt="{{ item.product.title }}" class="w-100 h-100 object-fit-contain p-2">
+                    {% else %}
+                        <div class="h-100 d-flex align-items-center justify-content-center small text-muted">No photo</div>
+                    {% endif %}
+                </div>
+
+                <div class="cart-item-info flex-grow-1 ms-3">
+                    <h4 class="cart-item-title fw-bold mb-1" style="font-size: 1.1rem; color: #212529;">
+                        {{ item.product.title }}
+                    </h4>
+                    <p class="text-muted small mb-1">
+                        {{ item.product.category.title }}
+                    </p>
+                    <span class="cart-item-price text-muted small">
+                        {{ item.product.price }} грн / шт
+                    </span>
+                </div>
+
+                <!-- Кількість -->
+                <div class="mx-4 text-center">
+                    <span class="text-muted small d-block mb-1 fw-bold">Кількість</span>
+                    <span class="badge bg-dark rounded-pill px-3 py-2 fs-6 fw-bold shadow-sm">
+                        {{ item.amount }} шт
+                    </span>
+                </div>
+
+                <!-- Вартість за цей вид товару (Ціна х Кількість) -->
+                <div class="mx-4 text-end" style="min-width: 100px;">
+                    <span class="text-muted small d-block mb-1 fw-bold">Сума</span>
+                    <span class="fw-bold text-dark fs-5">
+                        {{ item.get_total_price }} грн
+                    </span>
+                </div>
+
+                <div class="text-end">
+                    <form action="{% url 'storeapp:remove_from_cart' item.id %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-bold" onclick="return confirm('Видалити цей товар?')">
+                            <i class="bi bi-trash3-fill me-1"></i> Видалити
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <i class="bi bi-cart-x display-1 text-muted opacity-25"></i>
+                <h2 class="mt-4 fw-bold">Ваш кошик порожній</h2>
+                <a href="{% url 'storeapp:product_list' %}" class="btn btn-dark rounded-pill px-5 mt-3 fw-bold">Перейти до покупок</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if cart_items %}
+        <div class="cart-summary mt-5">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <h4 class="fw-bold mb-3" style="color: #212529;">Примітка до замовлення</h4>
+                    <textarea class="form-control rounded-4 border-0 p-3 shadow-sm" placeholder="Додайте побажання або адресу доставки..." rows="3" style="background: #f8f9fa; resize: none; border: 1px solid #eee !important;"></textarea>
+                </div>
+                <div class="col-lg-6 mt-4 mt-lg-0">
+                    <div class="summary-row d-flex justify-content-between mb-2">
+                        <span class="text-muted fw-bold">Товарів у кошику:</span>
+                        <span class="fw-bold text-dark">{{ cart_items.count }}</span>
+                    </div>
+                    <div class="summary-row d-flex justify-content-between mb-2">
+                        <span class="text-muted fw-bold">Доставка:</span>
+                        <span class="fw-bold text-success">Безкоштовно</span>
+                    </div>
+                    <hr class="my-3">
+                    <div class="summary-row total-row d-flex justify-content-between align-items-center mb-4">
+                        <span class="fs-4 fw-bold" style="color: #212529;">Разом:</span>
+                        <!-- Виводимо загальну суму, яку передали з views.py -->
+                        <span class="fs-3 fw-bold text-dark">
+                            {{ total_sum }} грн
+                        </span>
+                    </div>
+
+                    <form method="post" action="{% url 'storeapp:order_create' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-dark rounded-pill py-3 fw-bold shadow-sm w-100" style="letter-spacing: 0.5px;">
+                            ПІДТВЕРДИТИ ЗАМОВЛЕННЯ
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

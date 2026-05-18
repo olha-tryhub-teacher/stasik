@@ -1,15 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% for product in products %}
-{{product}}
-{% empty %}
-ще немає замовлень
-{% endfor %}
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Мої замовлення | SHOP{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/order_list.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="order-window">
+
+        <h1 class="order-header">Історія замовлень</h1>
+
+        <div class="order-list">
+            {% for order in orders %}
+            <div class="order-card">
+
+                <div class="d-flex align-items-center gap-4">
+                    <div class="order-icon">
+                        <i class="bi bi-box-seam fs-2"></i>
+                    </div>
+
+                    <div class="order-info">
+                        <span class="order-number">Замовлення #{{ order.id }}</span>
+                        <span class="order-date">від {{ order.created_at|date:"d.m.Y" }}</span>
+                    </div>
+                </div>
+
+                <div>
+                    {% if order.status == "pending" %}
+                        <span class="status-badge status-pending">В очікуванні</span>
+                    {% elif order.status == "paid" %}
+                        <span class="status-badge status-paid">Оплачено</span>
+                    {% elif order.status == "delivered" %}
+                        <span class="status-badge status-delivered">Доставлено</span>
+                    {% else %}
+                        <span class="status-badge bg-light text-dark">{{ order.status }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="order-price">
+                    {{ order.get_total_price }} грн
+                </div>
+
+                <div>
+                    <a href="{% url 'storeapp:order_detail' order.pk %}" class="btn-detail">
+                        Деталі <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
+
+                    <!-- 🔥 ДОДАНО ТІЛЬКИ ЦЕ -->
+                    <form method="post" action="{% url 'storeapp:order_cancel' order.id %}">
+                        {% csrf_token %}
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Відмінити
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+            {% empty %}
+            <div class="text-center py-5">
+                <i class="bi bi-bag-x display-1 text-muted opacity-25"></i>
+                <h2 class="mt-4 fw-bold">У вас ще немає замовлень</h2>
+                <a href="{% url 'storeapp:product_list' %}" class="btn btn-dark rounded-pill px-5 mt-3">
+                    Почати покупки
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

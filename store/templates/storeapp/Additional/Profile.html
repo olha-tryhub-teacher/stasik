@@ -1,10 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Мій Профіль | SHOP{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+
+        <!-- БЛОК КОРИСТУВАЧА ТА СТАТИСТИКИ -->
+        <div class="col-lg-4">
+            <!-- Картка користувача -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center bg-white mb-4">
+                <div class="mx-auto bg-dark text-white rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                    <i class="bi bi-person-fill fs-1"></i>
+                </div>
+                <h3 class="fw-bold mb-1">{{ user.username }}</h3>
+                <p class="text-muted small mb-3">Покупець SHOP</p>
+                <span class="badge bg-success rounded-pill px-3 py-2">Акаунт активний</span>
+            </div>
+
+            <!-- Блок статистики -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <h4 class="fw-bold mb-4" style="color: #212529;">Статистика акаунта</h4>
+
+                <div class="d-flex align-items-center mb-3 p-3 rounded-3" style="background-color: #f8f9fa;">
+                    <div class="bg-dark text-white rounded-3 p-2 me-3">
+                        <i class="bi bi-bag-check-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small d-block">Зроблено замовлень</span>
+                        <strong class="fs-5 text-dark">{{ total_orders_count }} шт.</strong>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-3 p-3 rounded-3" style="background-color: #f8f9fa;">
+                    <div class="bg-success text-white rounded-3 p-2 me-3">
+                        <i class="bi bi-cash-coin fs-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small d-block">Всього витрачено</span>
+                        <strong class="fs-5 text-success">{{ total_spent }} грн</strong>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center p-3 rounded-3" style="background-color: #f8f9fa;">
+                    <div class="bg-warning text-dark rounded-3 p-2 me-3">
+                        <i class="bi bi-cart-fill fs-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small d-block">Товарів у кошику</span>
+                        <strong class="fs-5 text-dark">{{ cart_items_count }} шт.</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК ІСТОРІЇ ЗАМОВЛЕНЬ -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <h4 class="fw-bold mb-4" style="color: #212529;">Історія замовлень</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="border-0 rounded-start-3">№ Замовлення</th>
+                                <th scope="col" class="border-0">Статус</th>
+                                <th scope="col" class="border-0">Сума</th>
+                                <th scope="col" class="border-0 rounded-end-3">Дія</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td class="fw-bold">#{{ order.id }}</td>
+                                <td>
+                                    {% if order.status == 'new' or order.status == 'pending' %}
+                                        <span class="badge bg-primary rounded-pill">Нове</span>
+                                    {% elif order.status == 'processing' %}
+                                        <span class="badge bg-warning text-dark rounded-pill">В обробці</span>
+                                    {% elif order.status == 'sent' %}
+                                        <span class="badge bg-info text-dark rounded-pill">Відправлено</span>
+                                    {% elif order.status == 'completed' %}
+                                        <span class="badge bg-success rounded-pill">Завершено</span>
+                                    {% else %}
+                                        <span class="badge bg-danger rounded-pill">Скасовано</span>
+                                    {% endif %}
+                                </td>
+                                <td class="fw-bold">{{ order.get_total_price }} грн</td>
+                                <td>
+                                    <a href="{% url 'storeapp:order_detail' order.id %}" class="btn btn-sm btn-outline-dark rounded-pill px-3">Деталі</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">
+                                    <i class="bi bi-box-seam display-6 d-block mb-2 opacity-50"></i>
+                                    Ви ще не робили замовлень.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

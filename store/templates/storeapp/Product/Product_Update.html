@@ -1,10 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Редагування товару{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="shadow-lg p-5 bg-white rounded-4">
+
+        <h1 class="fw-bold mb-4">Редагувати товар</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="text-danger small">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-dark px-4">
+                Зберегти зміни
+            </button>
+
+            <a href="{% url 'storeapp:product_list' %}" class="btn btn-secondary px-4">
+                Назад
+            </a>
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}
